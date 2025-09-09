@@ -1,4 +1,7 @@
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
@@ -15,6 +18,9 @@ public class Main {
                 case 1:
                     task1();
                     break;
+                case 2:
+                    task2();
+                    break;
                 default:
                     System.out.println("Invalid choice! Please try again.");
             }
@@ -26,6 +32,7 @@ public class Main {
     private static void printMenu() {
         System.out.println("Main Menu");
         System.out.println("1. Task 1: Expression calculation");
+        System.out.println("2. Task 2: Array union calculation");
         System.out.println("0. Exit");
     }
 
@@ -76,31 +83,73 @@ public class Main {
     }
 
     private static double calculateExpression(double a, double b) {
-        return ((a * b) - (a + b) * (a - b)) / (Math.pow(b, 4) + Math.pow(a, 3)) + (5 * b);
+        double denominator = Math.pow(b, 4) + Math.pow(a, 3);
+
+        if (denominator == 0)
+            throw new ArithmeticException("Division by zero");
+
+
+        return ((a * b) - (a + b) * (a - b)) / denominator + (5 * b);
     }
 
     private static void calculateDoubleDouble() {
-        double a = readDoubleInput("Enter value for a (double): ");
-        double b = readDoubleInput("Enter value for b (double): ");
+        try {
+            double a = readDoubleInput("Enter value for a (double): ");
+            double b = readDoubleInput("Enter value for b (double): ");
 
-        double result = calculateExpression(a, b);
-        System.out.printf("Result (double): %.4f%n", result);
+            double result = calculateExpression(a, b);
+            System.out.printf("Result (double): %.4f%n", result);
+        } catch (ArithmeticException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
     private static void calculateIntDouble() {
-        int a = readIntInput("Enter value for a (integer): ");
-        int b = readIntInput("Enter value for b (integer): ");
+        try {
+            int a = readIntInput("Enter value for a (integer): ");
+            int b = readIntInput("Enter value for b (integer): ");
 
-        double result = calculateExpression(a, b);
-        System.out.printf("Result (double): %.4f%n", result);
+            double result = calculateExpression(a, b);
+            System.out.printf("Result (double): %.4f%n", result);
+        } catch (ArithmeticException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
     private static void calculateDoubleInt() {
-        double a = readDoubleInput("Enter value for a (double): ");
-        double b = readDoubleInput("Enter value for b (double): ");
+        try {
+            double a = readDoubleInput("Enter value for a (double): ");
+            double b = readDoubleInput("Enter value for b (double): ");
 
-        int result = (int) calculateExpression(a, b);
-        System.out.printf("Result (integer): %d%n", result);
+            int result = (int) calculateExpression(a, b);
+            System.out.printf("Result (integer): %d%n", result);
+        } catch (ArithmeticException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
+    // =============== TASK 2 ===============
+    private static void task2() {
+        int[] arrayA = new int[200];
+        int[] arrayB = new int[200];
+
+        for (int i = 0; i < 200; i++) {
+            arrayA[i] = (int) (Math.random() * 101);
+            arrayB[i] = (int) (Math.random() * 101);
+        }
+
+        Set<Integer> unionSet = new HashSet<>();
+        for (int num : arrayA) unionSet.add(num);
+        for (int num : arrayB) unionSet.add(num);
+
+        Integer[] unionArray = unionSet.toArray(Integer[]::new);
+        Arrays.sort(unionArray);
+
+        int sum = Arrays.stream(unionArray).mapToInt(Integer::intValue).sum();
+
+        System.out.println("Array A: " + Arrays.toString(arrayA));
+        System.out.println("Array B: " + Arrays.toString(arrayB));
+        System.out.println("Union of A and B: " + Arrays.toString(unionArray));
+        System.out.println("Sum of union elements: " + sum);
+    }
 }
